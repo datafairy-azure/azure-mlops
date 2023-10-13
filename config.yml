@@ -1,0 +1,32 @@
+connections:
+  tenant_id: ""
+  subscription_id: "xxxxx"
+  resource_group: "xxxxx"
+  workspace: "xxxxx"
+deployments:
+  job_name: ""
+  endpoint_name: ""
+  endpoint_url: ""
+data:
+  sample_request: ""
+  file_name: ""
+  datastore: "xxxxx"
+  train_data: "train.parquet"
+  test_data: "test.parquet"
+model:
+  registered_name: "credit_defaults_model"
+  version: 1
+  workspace_id: ""
+  folder_path: "model"
+  perf_comparison_file_name: "perf_comparison.png"
+training:
+  job_name: ""
+  environment: ""
+  experiment: ""
+  test_train_ratio: 0.0
+  learning_rate: 0.0
+compute:
+  cluster_name: ""
+  image: ""
+  environment_name: ""
+  conda_file: ""

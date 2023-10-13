@@ -1,0 +1,10 @@
+# az ml online-deployment create -f jobs/deploy_model_to_endpoint.yml -g "rg" -w "ML-Workspace"
+$schema: https://azuremlschemas.azureedge.net/latest/managedOnlineDeployment.schema.json
+name: deployingmodeltoendpointv2
+endpoint_name: creditdefaultsendpointv2
+model: azureml:credit_defaults_model:version
+# code_configuration:
+#   code: ../../model-1/onlinescoring/
+#   scoring_script: score.py
+instance_type: Standard_DS3_v2
+instance_count: 1

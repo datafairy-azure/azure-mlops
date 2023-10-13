@@ -1,0 +1,29 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+type: command
+
+name: component_register_model
+display_name: registerModelComponent
+version: 1
+
+inputs:
+  cfg:
+    type: uri_file
+  evaluation_output:
+    type: uri_folder
+  model_path:
+    type: custom_model
+
+outputs:
+  model_info_output_path:
+    type: uri_folder
+
+code: ../../src/mlops/
+
+environment: azureml:credits-default-train-env:16
+
+command: >-
+  python register.py
+  --model_path ${{inputs.model_path}}
+  --evaluation_output ${{inputs.evaluation_output}}
+  --model_info_output_path ${{outputs.model_info_output_path}}
+  --cfg ${{inputs.cfg}}

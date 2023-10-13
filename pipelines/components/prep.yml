@@ -1,0 +1,32 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+type: command
+
+name: component_prep_data
+display_name: prepDataComponent
+version: 1
+
+inputs:
+  raw_data:
+    type: uri_file
+  enable_monitoring:
+    type: string
+  table_name:
+    type: string
+  cfg:
+    type: uri_file
+
+outputs:
+  data_path:
+    type: uri_folder
+
+code: ../../src/mlops/
+
+environment: azureml:credits-default-train-env:16
+
+command: >-
+  python prep.py
+  --raw_data ${{inputs.raw_data}}
+  --enable_monitoring ${{inputs.enable_monitoring}}
+  --table_name ${{inputs.table_name}}
+  --cfg ${{inputs.cfg}}
+  --data_path ${{outputs.data_path}}

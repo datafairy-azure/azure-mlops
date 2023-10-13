@@ -1,0 +1,5 @@
+$schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
+name: credits-default-train-env
+image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:20230608.v1
+conda_file: ../../environment/conda.yml
+description: Environment created from a Docker image plus Conda environment.

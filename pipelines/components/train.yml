@@ -1,0 +1,26 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+type: command
+
+name: component_train_model
+display_name: trainModelComponent
+version: 1
+
+inputs:
+  data_path:
+    type: uri_folder
+  learning_rate:
+    type: number
+
+outputs:
+  model_output:
+    type: uri_folder
+
+code: ../../src/mlops/
+
+environment: azureml:credits-default-train-env:16
+
+command: >-
+  python train.py
+  --data_path ${{inputs.data_path}}
+  --learning_rate ${{inputs.learning_rate}}
+  --model_output ${{outputs.model_output}}

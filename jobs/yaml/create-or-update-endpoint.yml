@@ -1,0 +1,6 @@
+# az ml online-endpoint create -n 'creditdefaultsendpointv2' -f ./jobs/create_or_update_endpoint.yml -g "rg" -w "ML-Workspace"
+$schema: https://azuremlschemas.azureedge.net/latest/managedOnlineEndpoint.schema.json
+name: credit-default-endpoint
+auth_mode: aml_token
+# az ml online-endpoint update -n 'creditdefaultsendpointv2' --traffic "deployingmodeltoendpointv2=100" -g "rg" -w "ML-Workspace"
+# az ml online-endpoint invoke -n 'creditdefaultsendpointv2' --request-file sample_request.json -g "rg" -w "ML-Workspace"

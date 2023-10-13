@@ -1,0 +1,80 @@
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
+type: pipeline
+experiment_name: model-training
+description: Training Pipeline to train a model
+
+inputs:
+  raw_data:
+    mode: ro_mount
+    type: uri_file
+    path: azureml://datastores/xxx/paths/credit_defaults_model/data/raw/default_credit_card_clients.csv
+  enable_monitoring: 'false'
+  table_name: 'creadit_card_defaults_table'
+  cfg:
+    mode: ro_mount
+    type: uri_file
+    path: azureml://datastores/xxx/paths/credit_defaults_model/config/config.yml
+
+outputs:
+  data_path:
+    mode: rw_mount
+    type: uri_folder
+    path: paths/credit_defaults_model/data
+  evaluation_output:
+    mode: rw_mount
+    type: uri_folder
+    path: paths/credit_defaults_model/model-version/score
+  model_info_output_path:
+    mode: rw_mount
+    type: uri_folder
+    path: paths/credit_defaults_model/model-version/model
+  trained_model:
+    type: custom_model
+    path: paths/credit_defaults_model/model-version/model
+
+settings:
+  default_datastore: azureml:xxx
+  default_compute: azureml:cluster-name
+  continue_on_step_failure: false
+  default_environment: azureml:credits-default-train-env:model-version
+
+jobs:
+  component_prep_data:
+    type: command
+    component: ./components/prep.yml
+    inputs:
+      cfg: ${{parent.inputs.cfg}}
+      raw_data: ${{parent.inputs.raw_data}}
+      enable_monitoring: ${{parent.inputs.enable_monitoring}}
+      table_name: ${{parent.inputs.table_name}}
+    outputs:
+      data_path: ${{parent.outputs.data_path}}
+
+  component_train_model:
+    type: command
+    component: ./components/train.yml
+    inputs:
+      data_path: ${{parent.jobs.component_prep_data.outputs.data_path}}
+      learning_rate: 0.75
+    outputs:
+      model_output: ${{parent.outputs.trained_model}}
+
+  component_evaluate_model:
+    type: command
+    component: ./components/evaluate.yml
+    inputs:
+      cfg: ${{parent.inputs.cfg}}
+      data_path: ${{parent.jobs.component_prep_data.outputs.data_path}}
+      model_path: ${{parent.jobs.component_train_model.outputs.model_output}}
+    outputs:
+      output_folder: ${{parent.outputs.evaluation_output}}
+
+  component_register_model:
+    type: command
+    component: ./components/register.yml
+    inputs:
+      cfg: ${{parent.inputs.cfg}}
+      model_path: ${{parent.jobs.component_train_model.outputs.model_output}}
+      evaluation_output: ${{parent.jobs.component_evaluate_model.outputs.output_folder}}
+    outputs:
+      model_info_output_path: ${{parent.outputs.model_info_output_path}}
