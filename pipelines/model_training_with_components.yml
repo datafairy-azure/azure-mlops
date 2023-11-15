@@ -19,24 +19,24 @@ outputs:
   data_path:
     mode: rw_mount
     type: uri_folder
-    path: paths/credit_defaults_model/data
+    path: azureml://datastores/xxx/paths/credit_defaults_model/data
   evaluation_output:
     mode: rw_mount
     type: uri_folder
-    path: paths/credit_defaults_model/model-version/score
+    path: azureml://datastores/xxx/paths/credit_defaults_model/1/score
   model_info_output_path:
     mode: rw_mount
     type: uri_folder
-    path: paths/credit_defaults_model/model-version/model
+    path: azureml://datastores/xxx/paths/credit_defaults_model/1/model
   trained_model:
     type: custom_model
-    path: paths/credit_defaults_model/model-version/model
+    path: azureml://datastores/xxx/paths/credit_defaults_model/1/model
 
 settings:
   default_datastore: azureml:xxx
-  default_compute: azureml:cluster-name
+  default_compute: azureml:cluster-dev-cpu
   continue_on_step_failure: false
-  default_environment: azureml:credits-default-train-env:model-version
+  default_environment: azureml:credit-default-env:1
 
 jobs:
   component_prep_data:

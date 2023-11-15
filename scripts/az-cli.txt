@@ -5,3 +5,6 @@ az ml compute create --file compute.yml --resource-group my-resource-group --wor
 az ml job create --file job.yml
 
 az ml online-deployment create -f deployment.YAML
+
+
+az ml job create --subscription "xxx" -w "xxx" -g "xxx" --file "pipelines\\model_training_with_components.yml"

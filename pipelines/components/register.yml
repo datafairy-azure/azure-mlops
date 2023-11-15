@@ -19,7 +19,7 @@ outputs:
 
 code: ../../src/mlops/
 
-environment: azureml:credits-default-train-env:env-version
+environment: azureml:credit-default-env:1
 
 command: >-
   python register.py

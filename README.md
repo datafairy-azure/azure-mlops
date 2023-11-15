@@ -1,7 +1,7 @@
 # Getting started
 - Create a virtual environment: python -m venv .venv
 - Activate the venv: source .venv/bin/activate
-- pip install setuptools --upgrade
+- pip install --upgrade setuptools
 - pip install --upgrade pip
 - pip install -r requirements.txt
 - pip install . to install the mlops package

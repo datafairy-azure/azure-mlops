@@ -21,3 +21,4 @@ dependencies:
       - scikit-learn==1.0.0
       - debugpy==1.6.3
       - fsspec==2021.8.1
+      - requests==2.26.0
