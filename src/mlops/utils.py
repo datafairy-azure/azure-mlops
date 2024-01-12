@@ -8,10 +8,34 @@ import yaml
 
 
 def load_config(config_path: str) -> dict:
-    """Function to load config file."""
-    cfg = []
-    with open(config_path, "r") as ymlfile:
-        cfg = yaml.safe_load(ymlfile)
+    """
+    Function to load a configuration file.
+
+    Parameters:
+    - config_path (str): The path to the configuration file.
+
+    Returns:
+    - dict: The loaded configuration as a dictionary.
+
+    Raises:
+    - FileNotFoundError: If the specified file is not found.
+    - TypeError: If the input is not a string.
+    """
+    cfg = {}
+    if isinstance(config_path, str):
+        try:
+            with open(config_path, "r") as ymlfile:
+                cfg = yaml.safe_load(ymlfile)
+                if cfg is None:
+                    cfg = {}
+                elif not isinstance(cfg, dict):
+                    raise yaml.parser.ParserError(
+                        "Loaded configuration is not a dictionary."
+                    )
+        except FileNotFoundError:
+            raise FileNotFoundError(f"File {config_path} not found.")
+    else:
+        raise TypeError("Input must be a string.")
     return cfg
 
 
