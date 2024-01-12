@@ -4,7 +4,7 @@
 - pip install --upgrade setuptools
 - pip install --upgrade pip
 - pip install -r requirements.txt
-- pip install . to install the mlops package
+- pip install src to install the mlops package
 - fill out config.yml and move it to ./config
 - setup pre-comit hooks: pre-commit install
 
@@ -67,3 +67,13 @@
 
  ### Monitor a model
  - https://learn.microsoft.com/en-us/azure/machine-learning/how-to-collect-production-data?view=azureml-api-2&tabs=python
+
+ # Extras
+ ## Test coverage
+Assuming you have file calles sample.py and test written in test.py. Use the following code to run tests with coverage:
+
+```py.test test.py --cov=sample.py```
+
+To get the coverage report use:
+
+```coverage report -m```
