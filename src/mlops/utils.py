@@ -26,12 +26,12 @@ def load_config(config_path: str) -> dict:
         try:
             with open(config_path, "r") as ymlfile:
                 cfg = yaml.safe_load(ymlfile)
-                if cfg is None:
-                    cfg = {}
-                elif not isinstance(cfg, dict):
-                    raise yaml.parser.ParserError(
-                        "Loaded configuration is not a dictionary."
-                    )
+            if cfg is None:
+                cfg = {}
+            elif not isinstance(cfg, dict):
+                raise yaml.parser.ParserError(
+                    "Loaded configuration is not a dictionary."
+                )
         except FileNotFoundError:
             raise FileNotFoundError(f"File {config_path} not found.")
     else:
