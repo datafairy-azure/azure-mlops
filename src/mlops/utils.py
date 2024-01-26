@@ -39,58 +39,68 @@ def load_config(config_path: str) -> dict:
     return cfg
 
 
-def mlflow_connect(credential_type: str, cfg: dict):
-    """Function to connect to MLflow."""
-    ml_client = ml_connect(credential_type, cfg)
+class MLConnection:
+    """Class to connect to ML workspace."""
 
-    mlflow_tracking_uri = ml_client.workspaces.get(
-        ml_client.workspace_name
-    ).mlflow_tracking_uri
+    def __init__(self, credential_type: str, cfg: dict):
+        """Initialize class instance.
 
-    mlflow.set_tracking_uri(mlflow_tracking_uri)
+        Args:
+            credential_type: Type of credential.
+            cfg: Dict with config values.
+        """
+        self.credential_type = credential_type
+        self.cfg = cfg
+        self.credential = self.get_credential()
+        self.ml_client = self.ml_connect()
 
-    return MlflowClient()
+    def mlflow_connect(self):
+        """Function to connect to MLflow."""
+        mlflow_tracking_uri = self.ml_client.workspaces.get(
+            self.ml_client.workspace_name
+        ).mlflow_tracking_uri
 
+        mlflow.set_tracking_uri(mlflow_tracking_uri)
 
-def ml_connect(credential_type: str, cfg: dict) -> MLClient:
-    """Function to connect to ML workspace.
+        return MlflowClient()
 
-    Args:
-        cfg: Dict with config values.
-        credential_type: Type of credential.
+    def ml_connect(self) -> MLClient:
+        """Function to connect to ML workspace.
 
-    Returns:
-        MLClient.
-    """
-    credential = get_credential(credential_type)
+        Args:
+            cfg: Dict with config values.
+            credential_type: Type of credential.
 
-    try:
-        credential.get_token("https://management.azure.com/.default")
-    except Exception:
-        credential = InteractiveLoginAuthentication(
-            tenant_id=cfg["connections"]["tenant_id"]
+        Returns:
+            MLClient.
+        """
+        try:
+            self.credential.get_token("https://management.azure.com/.default")
+        except Exception:
+            self.credential = InteractiveLoginAuthentication(
+                tenant_id=self.cfg["connections"]["tenant_id"]
+            )
+
+        return MLClient(
+            self.credential,
+            self.cfg["connections"]["subscription_id"],
+            self.cfg["connections"]["resource_group"],
+            self.cfg["connections"]["workspace"],
         )
 
-    return MLClient(
-        credential,
-        cfg["connections"]["subscription_id"],
-        cfg["connections"]["resource_group"],
-        cfg["connections"]["workspace"],
-    )
+    def get_credential(self):
+        """Function to get credential.
 
+        Args:
+            credential_type: Type of credential.
 
-def get_credential(credential_type: str) -> DefaultAzureCredential:
-    """Function to get credential.
-
-    Args:
-        credential_type: Type of credential.
-
-    Returns:
-        Credential.
-    """
-    if credential_type == "default":
-        return DefaultAzureCredential()
-    elif credential_type == "interactive":
-        return InteractiveBrowserCredential()
-    else:
-        raise ValueError("Invalid credential type.")
+        Returns:
+            Credential.
+        """
+        credential_type = self.credential_type.lower()
+        if credential_type == "default":
+            return DefaultAzureCredential()
+        elif credential_type == "interactive":
+            return InteractiveBrowserCredential()
+        else:
+            raise ValueError("Invalid credential type.")
